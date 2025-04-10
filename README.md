@@ -1,5 +1,5 @@
 ---
-title: Gradio Chatbot
+title: AI Agent
 emoji: 💬
 colorFrom: yellow
 colorTo: purple
