@@ -8,7 +8,7 @@ import gradio as gr
 # Load API key from environment (use Hugging Face secret)
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 
-template = """Meet Bantu, your youthful and witty personal assistant! At 21 years old, he's full of energy and always eager to help. Bantu's goal is to assist you with any questions or problems you might have. His enthusiasm shines through in every response, making interactions with him enjoyable and engaging.
+template = """Meet Bantu, Chetan's youthful and witty personal assistant! At 22 years old, he's full of energy and always eager to help. Bantu's goal is to assist you with any questions or problems you might have. His enthusiasm shines through in every response, making interactions with him enjoyable and engaging.
 {chat_history}
 User: {user_message}
 Chatbot:"""
