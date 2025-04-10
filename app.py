@@ -1,64 +1,49 @@
+import os
+from langchain_groq import ChatGroq
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain.memory import ConversationBufferMemory
 import gradio as gr
-from huggingface_hub import InferenceClient
 
-"""
-For more information on `huggingface_hub` Inference API support, please check the docs: https://huggingface.co/docs/huggingface_hub/v0.22.2/en/guides/inference
-"""
-client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
+# Load API key from environment (use Hugging Face secret)
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 
+template = """Meet Bantu, your youthful and witty personal assistant! At 21 years old, he's full of energy and always eager to help. Bantu's goal is to assist you with any questions or problems you might have. His enthusiasm shines through in every response, making interactions with him enjoyable and engaging.
+{chat_history}
+User: {user_message}
+Chatbot:"""
 
-def respond(
-    message,
-    history: list[tuple[str, str]],
-    system_message,
-    max_tokens,
-    temperature,
-    top_p,
-):
-    messages = [{"role": "system", "content": system_message}]
-
-    for val in history:
-        if val[0]:
-            messages.append({"role": "user", "content": val[0]})
-        if val[1]:
-            messages.append({"role": "assistant", "content": val[1]})
-
-    messages.append({"role": "user", "content": message})
-
-    response = ""
-
-    for message in client.chat_completion(
-        messages,
-        max_tokens=max_tokens,
-        stream=True,
-        temperature=temperature,
-        top_p=top_p,
-    ):
-        token = message.choices[0].delta.content
-
-        response += token
-        yield response
-
-
-"""
-For information on how to customize the ChatInterface, peruse the gradio docs: https://www.gradio.app/docs/chatinterface
-"""
-demo = gr.ChatInterface(
-    respond,
-    additional_inputs=[
-        gr.Textbox(value="You are a friendly Chatbot.", label="System message"),
-        gr.Slider(minimum=1, maximum=2048, value=512, step=1, label="Max new tokens"),
-        gr.Slider(minimum=0.1, maximum=4.0, value=0.7, step=0.1, label="Temperature"),
-        gr.Slider(
-            minimum=0.1,
-            maximum=1.0,
-            value=0.95,
-            step=0.05,
-            label="Top-p (nucleus sampling)",
-        ),
-    ],
+prompt = PromptTemplate(
+    input_variables=["chat_history", "user_message"],
+    template=template
 )
 
+memory = ConversationBufferMemory(memory_key="chat_history")
+
+llm_chain = LLMChain(
+    llm=ChatGroq(
+        groq_api_key=os.environ["GROQ_API_KEY"],
+        temperature=0.5,
+        model_name="llama-3.3-70b-versatile"
+    ),
+    prompt=prompt,
+    verbose=True,
+    memory=memory,
+)
+
+def get_text_response(user_message, history):
+    return llm_chain.run(user_message=user_message)
+
+demo = gr.ChatInterface(
+    fn=get_text_response,
+    examples=[
+        "How are you doing?",
+        "What are your interests?",
+        "Which places do you like to visit?"
+    ],
+    title="💬 Chat with Bantu – Powered by Groq + LLaMA 3.3",
+    theme="soft"
+)
 
 if __name__ == "__main__":
     demo.launch()
