@@ -24,7 +24,7 @@ llm_chain = LLMChain(
     llm=ChatGroq(
         groq_api_key=os.environ["GROQ_API_KEY"],
         temperature=0.5,
-        model_name="llama-3.3-70b-versatile"
+        model_name="llama-3.1-8b-instant"
     ),
     prompt=prompt,
     verbose=True,
