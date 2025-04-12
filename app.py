@@ -41,7 +41,7 @@ demo = gr.ChatInterface(
         "What are your interests?",
         "Which places do you like to visit?"
     ],
-    title="💬 Chat with Bantu – Powered by Groq + LLaMA 3.3",
+    title="💬 Chat with Bantu",
     theme="soft"
 )
 
