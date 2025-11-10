@@ -1,3 +1,10 @@
+# HuggingFace Link
+https://huggingface.co/spaces/ChetanKumar01/AI_Agent
+
+# Linked In Link
+https://www.linkedin.com/posts/chetan-kumar-patruni_chat-with-bantu-powered-by-groq-llama-activity-7316397198106075137-NOsI?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD4_SUQBBYHcCbB8fGJDReojMInn5E4i0Ew
+
+
 ---
 title: AI Agent
 sdk: gradio
